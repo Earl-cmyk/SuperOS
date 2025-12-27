@@ -9,33 +9,64 @@ Coordinates kernel, services, and UI.
 If this process dies, the kernel must remain intact.
 """
 
+import asyncio
+from loguru import logger
+
 from orchestrator.capability_enforcer import default_enforcer
 from orchestrator.process_control import ProcessControl
 from orchestrator.scheduler import SchedulerPolicyEngine
-from orchestrator.ipc_client import IPCClient
 from orchestrator.logger import Logger
+from orchestrator.process_manager import ProcessManager
+from orchestrator.ipc_bus import IPCBus
 
 
-def main() -> None:
-    # Initialize core components
-    logger = Logger()
+async def main() -> None:
+    # -------------------------
+    # Boot logging first
+    # -------------------------
+
+    sys_logger = Logger()
+    sys_logger.info("orchestrator", "orchestrator starting")
+
+    # -------------------------
+    # Core IPC spine
+    # -------------------------
+
+    ipc = IPCBus()
+
+    # -------------------------
+    # Policy & control layers
+    # -------------------------
+
     enforcer = default_enforcer()
-    ipc = IPCClient()
     scheduler = SchedulerPolicyEngine()
     proc_control = ProcessControl(enforcer)
 
-    logger.info("orchestrator", "orchestrator starting")
+    # -------------------------
+    # Process lifecycle manager
+    # -------------------------
 
-    # Register runtime services (stub)
-    # proc_control.spawn_process(...)
+    process_manager = ProcessManager(ipc)
 
-    logger.info("orchestrator", "system entering steady state")
+    sys_logger.info("orchestrator", "core managers online")
 
-    # Main orchestrator loop (stub)
-    while True:
-        # React to kernel events, IPC, scheduling signals
-        pass
+    # -------------------------
+    # BOOT EVENT (important)
+    # -------------------------
+
+    await ipc.publish(
+        "process.spawn",
+        {"project_id": "boot-demo"},
+    )
+
+    sys_logger.info("orchestrator", "system entering steady state")
+
+    # -------------------------
+    # Enter IPC event loop
+    # -------------------------
+
+    await ipc.run()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

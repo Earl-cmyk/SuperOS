@@ -1,35 +1,18 @@
-# Core runtime
-python>=3.10
-
-# IPC / async
-asyncio
-uvloop
 aiofiles
 
-# Orchestrator & services
-pydantic
+pydantic>=2.0
 pyyaml
 rich
 loguru
 
-# Database (Supabase)
-supabase
-postgrest
-gotrue
-realtime
-
-# Web / HTTP
-httpx
+httpx>=0.24
 fastapi
 uvicorn
 
-# UI helpers
 textual
 
-# Machine Learning (service-side, optional)
 numpy
 scikit-learn
 
-# Utilities
 watchdog
 psutil
