@@ -1,0 +1,54 @@
+// userspace/authd-java/build.gradle
+//
+// SuperOS Auth Daemon (Java)
+// User-space service for authentication & identity mediation.
+// This service has NO kernel authority.
+
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'superos.userspace'
+version = '0.1.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JSON handling
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
+
+    // HTTP client (for external IdP if needed)
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+
+    // Logging
+    implementation 'org.slf4j:slf4j-api:2.0.13'
+    runtimeOnly 'org.slf4j:slf4j-simple:2.0.13'
+
+    // Testing
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+}
+
+application {
+    mainClass = 'superos.authd.Main'
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': application.mainClass
+        )
+    }
+}

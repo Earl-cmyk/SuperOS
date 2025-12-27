@@ -1,0 +1,35 @@
+# Core runtime
+python>=3.10
+
+# IPC / async
+asyncio
+uvloop
+aiofiles
+
+# Orchestrator & services
+pydantic
+pyyaml
+rich
+loguru
+
+# Database (Supabase)
+supabase
+postgrest
+gotrue
+realtime
+
+# Web / HTTP
+httpx
+fastapi
+uvicorn
+
+# UI helpers
+textual
+
+# Machine Learning (service-side, optional)
+numpy
+scikit-learn
+
+# Utilities
+watchdog
+psutil

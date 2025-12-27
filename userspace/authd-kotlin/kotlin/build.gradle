@@ -1,0 +1,51 @@
+// userspace/authd-kotlin/build.gradle
+//
+// SuperOS Auth Daemon (Kotlin)
+// User-space identity service with ZERO kernel authority.
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '2.0.20'
+    id 'application'
+}
+
+group = 'superos.userspace'
+version = '0.1.0'
+
+kotlin {
+    jvmToolchain(21)
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JSON
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
+
+    // HTTP client
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    // Logging
+    implementation("org.slf4j:slf4j-api:2.0.13")
+    runtimeOnly("org.slf4j:slf4j-simple:2.0.13")
+
+    // Testing
+    testImplementation(kotlin("test"))
+}
+
+application {
+    mainClass.set("superos.authd.MainKt")
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes {
+            "Main-Class" to application.mainClass.get()
+        }
+    }
+}
