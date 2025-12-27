@@ -1,11 +1,11 @@
-
 # **SuperOS**
 
-**SuperOS** is a hosted, microkernel-inspired **process control plane** for developers.  
-It provides real process isolation, explicit authority, and kernel-enforced execution, while remaining portable and developer-focused.
+**SuperOS** is a hosted, microkernel-inspired **process control plane** for developers.
+
+It provides **real process isolation**, **capability-based authority**, and **kernel-enforced execution**, while remaining portable and developer-focused.
 
 **SuperOS is not a terminal emulator.**  
-**Shells are clients, never rulers.**
+**Shells are clients, never authorities.**
 
 ---
 
@@ -35,115 +35,117 @@ It provides real process isolation, explicit authority, and kernel-enforced exec
 ---
 
 ## **What SuperOS Is**
-SuperOS is a hosted operating system abstraction designed to:
 
-- Manage real OS processes  
-- Enforce capability-based security  
-- Provide explicit IPC everywhere  
-- Treat projects as first-class managed entities  
-- Run language runtimes as user-space services  
-- Separate **mechanism (Rust)** from **policy (Python)**  
-- Integrate cloud services (DB, ML) without violating kernel authority  
+SuperOS is an operating-system *abstraction* that runs **on top of a host OS** and is designed to:
 
-SuperOS behaves like an OS **inside** a host OS, without pretending to be bare metal.
+- Manage **real host OS processes** via a trusted kernel
+- Enforce **capability-based security** with no ambient authority
+- Require **explicit IPC** for all inter-component communication
+- Treat **projects as first-class, kernel-managed entities**
+- Run **language runtimes as user-space services**
+- Strictly separate **mechanism (Rust kernel)** from **policy (Python orchestrator)**
+- Integrate cloud services **without granting them authority**
+
+SuperOS behaves like an OS *inside* another OS, without pretending to be bare metal.
 
 ---
 
 ## **What SuperOS Is Not**
+
 SuperOS is **not**:
 
-- A terminal emulator  
-- A REPL runner  
-- A shell-centric system  
-- A monolithic application  
-- A “just run this command” environment  
-- A self-modifying or autonomous agent platform  
+- A terminal emulator
+- A shell-driven system
+- A REPL runner
+- A monolithic application
+- A “just run this command” environment
+- An autonomous or self-modifying agent platform
 
-If execution occurs without kernel mediation, it is a **design violation**.
+If execution bypasses kernel mediation, it is a **design violation**.
 
 ---
 
 ## **Core Principles**
 
 ### **1. Microkernel-Inspired Architecture**
-- Minimal trusted kernel  
-- Everything else in user space  
-- Explicit IPC between all components  
+- Minimal trusted kernel
+- All services in user space
+- Mandatory IPC between components
 
 ### **2. Explicit Authority**
-- No ambient authority  
-- No implicit permissions  
-- All power flows from capabilities  
+- No ambient authority
+- No implicit permissions
+- All power derives from explicit capabilities
 
 ### **3. Real Processes**
-- Every execution is a kernel-managed process  
-- Lifecycle is observable, schedulable, terminable  
-- Projects map to process trees  
+- Every execution is a kernel-managed process
+- Full lifecycle visibility and control
+- Projects map to **process trees**, not folders
 
 ### **4. Shells Are Clients**
-- Shells are unprivileged user-space programs  
-- UI, CLI, and API shells are equivalent  
-- Killing a shell must not affect system integrity  
+- Shells are unprivileged user-space processes
+- UI, CLI, and API shells are equivalent
+- Killing a shell must never affect system integrity
 
 ---
 
 ## **System Architecture**
 
 ```
-┌──────────────────────────────┐
-│            UI Shell          │
-│  (Terminal, Web, SQL, ML)    │
-└──────────────┬───────────────┘
-               │ IPC
-┌──────────────▼───────────────┐
-│     User-Space Services      │
-│  (Runtimes, Web, DB, ML)     │
-└──────────────┬───────────────┘
-               │ IPC
-┌──────────────▼───────────────┐
-│    Orchestrator (Python)     │
-│  Scheduling & Policy Layer  │
-└──────────────┬───────────────┘
-               │ Syscalls / IPC
-┌──────────────▼───────────────┐
-│     SuperOS Kernel (Rust)    │
-│ Process | IPC | Memory | Cap │
-└──────────────────────────────┘
+┌─────────────────────────────┐
+│ UI Shell                    │
+│ (Terminal, Web, SQL, ML)    │
+└──────────────┬──────────────┘
+│ IPC
+┌──────────────▼──────────────┐
+│ User-Space Services         │
+│ (Runtimes, Web, DB, ML)     │
+└──────────────┬──────────────┘
+│ IPC
+┌──────────────▼──────────────┐
+│ Orchestrator (Python)       │
+│ Policy & Scheduling         │
+└──────────────┬──────────────┘
+│ Syscalls / IPC
+┌──────────────▼──────────────┐
+│ SuperOS Kernel (Rust)       │
+│ Process | IPC | Memory |    │
+│ Capabilities Enforcement    │
+└─────────────────────────────┘
 ```
 
 ---
 
-
 ## **Execution Model**
 
-1. User initiates an action (UI / Shell)
-2. Request sent via IPC
+1. User initiates an action via a shell
+2. Shell sends a request over IPC
 3. Kernel validates capabilities
 4. Kernel spawns or schedules a process
 5. Runtime service executes code
-6. `stdout` / `stderr` captured as streams
-7. UI subscribes to output
+6. `stdout` / `stderr` are captured as streams
+7. Shell subscribes to process output
 
-There is **no direct execution path** from UI to host OS.
+There is **no direct execution path** from shell to host OS.
 
 ---
 
 ## **Security Model**
 
-* Capability-based access control
-* Per-process capability tables
-* No global privileges
-* No shell-granted authority
-* Kernel enforces all boundaries
+- Capability-based access control
+- Per-process capability tables
+- No global privileges
+- No shell-granted authority
+- Kernel-enforced boundaries
 
-**Example capabilities:**
+### **Example Capabilities**
 
-* `PROC_SPAWN`
-* `FS_READ:/project`
-* `FS_WRITE:/project`
-* `NET_BIND:localhost`
-* `IPC_SEND:channel_id`
-* `ML_CONTEXT:logs`
+- `PROC_SPAWN`
+- `FS_READ:/project`
+- `FS_WRITE:/project`
+- `NET_BIND:localhost`
+- `IPC_SEND:channel_id`
+- `ML_CONTEXT:logs`
 
 ---
 
@@ -151,12 +153,12 @@ There is **no direct execution path** from UI to host OS.
 
 A process is a kernel-managed execution context with:
 
-* PID
-* Address space
-* Capability table
-* IPC endpoints
-* Thread set
-* Lifecycle state
+- PID
+- Virtual address space
+- Capability table
+- IPC endpoints
+- Thread set
+- Lifecycle state
 
 Projects map **1:1 to process trees**.
 
@@ -166,10 +168,10 @@ Projects map **1:1 to process trees**.
 
 All communication is explicit and kernel-mediated:
 
-* Pipes (stream-oriented)
-* Message queues (structured)
-* Restricted shared memory (explicit mapping)
-* Events / signals (state notifications)
+- Pipes (byte streams)
+- Message queues (structured messages)
+- Restricted shared memory (explicit mapping)
+- Events and signals (state notifications)
 
 There is **no implicit shared state**.
 
@@ -177,27 +179,27 @@ There is **no implicit shared state**.
 
 ## **Memory Model**
 
-* Per-process virtual address spaces
-* Kernel-managed paging
-* Fault isolation
-* No unsafe shared memory
-* Rust-only kernel implementation
+- Per-process virtual address spaces
+- Kernel-managed paging
+- Fault isolation
+- No unsafe shared memory
+- Kernel implemented entirely in Rust
 
 Shared memory requires:
 
-* Explicit capability
-* Kernel-approved mapping
-* Defined ownership rules
+- Explicit capability
+- Kernel-approved mapping
+- Defined ownership and lifetime rules
 
 ---
 
 ## **Filesystem Model**
 
-* Kernel-visible logical filesystem
-* Projects have isolated directory trees
-* All filesystem access is capability-gated
-* No ambient working directory
-* Filesystem is an **authority surface**, not a convenience
+- Kernel-visible logical filesystem
+- Projects have isolated directory trees
+- All filesystem access is capability-gated
+- No ambient working directory
+- Filesystem treated as an **authority surface**
 
 Projects are **local-first** and authoritative on disk.
 
@@ -205,13 +207,13 @@ Projects are **local-first** and authoritative on disk.
 
 ## **Scheduling Model**
 
-* Context switching in Rust (mechanism)
-* Scheduling policy in Python (policy)
-* Cooperative + preemptive hybrid
-* Foreground vs background priorities
-* Starvation prevention via aging
+- Context switching implemented in Rust (mechanism)
+- Scheduling policy defined in Python (policy)
+- Cooperative + preemptive hybrid
+- Foreground and background priorities
+- Starvation prevention via aging
 
-The scheduler never lives in the UI or shell.
+The scheduler never lives in a shell.
 
 ---
 
@@ -219,74 +221,66 @@ The scheduler never lives in the UI or shell.
 
 All languages execute via **user-space runtime services**:
 
-* Python
-* C / C++ / C#
-* Java / Kotlin / Swift
-* HTML / CSS / JS / TS (virtual web server)
-* SQL (table visualization)
-* R
-* Rust
-* Arduino
-* Unreal Engine
-* Bash
-* Git
-* PowerShell
+- Python
+- C / C++ / C#
+- Java / Kotlin / Swift
+- HTML / CSS / JS / TS (virtual web server)
+- SQL (query and table visualization)
+- R
+- Rust
+- Arduino
+- Unreal Engine
+- Bash
+- Git
+- PowerShell
 
 Runtimes:
 
-* Are normal processes
-* Have limited capabilities
-* Cannot escape their sandbox
+- Are normal kernel-managed processes
+- Have minimal, explicit capabilities
+- Cannot escape their sandbox
 
 ---
 
 ## **Database & Project Management**
 
-SuperOS uses a **cloud database (Supabase)** as a **metadata and sync layer**, not as an authority.
+SuperOS uses a **cloud database (Supabase)** strictly as a **metadata and synchronization layer**.
 
 ### **Supabase Stores**
 
-* Project metadata
-* Ownership and permissions
-* Version / snapshot references
-* UI state and sync status
+- Project metadata
+- Ownership and permissions
+- Version and snapshot references
+- UI state and sync status
 
 ### **Local Filesystem Stores**
 
-* Actual project files
-* Execution artifacts
-* Runtime outputs
+- Actual project files
+- Execution artifacts
+- Runtime outputs
 
-Projects are imported via an **Upload / Import Project** action:
-
-* Folder selected in UI
-* Orchestrator validates and registers project
-* Metadata stored in Supabase
-* Project mounted into `projects/`
-* Kernel enforces access
-
-Supabase never bypasses the kernel.
+Supabase **never** bypasses kernel enforcement.
 
 ---
 
 ## **Machine Learning Integration**
 
-Machine learning is implemented as a **user-space service**, never in the kernel.
+Machine learning is implemented as a **user-space analysis service**.
 
-ML services can:
+ML services may:
 
-* Request read-only context (logs, errors, metadata)
-* Analyze execution output
-* Suggest actions or fixes
+- Request read-only execution context
+- Analyze logs, errors, and metadata
+- Suggest actions or fixes
 
-ML services **cannot**:
+ML services may **not**:
 
-* Execute code
-* Spawn processes
-* Write files
-* Escalate privileges
+- Execute code
+- Spawn processes
+- Write files
+- Escalate privileges
 
-All ML actions are capability-gated and enforced by the orchestrator.
+All ML access is capability-gated and orchestrator-mediated.
 
 ---
 
@@ -294,15 +288,15 @@ All ML actions are capability-gated and enforced by the orchestrator.
 
 The UI is an **IPC client**, not an executor.
 
-Components:
+Components include:
 
-* Window manager
-* Terminal
-* Error sidebar
-* Project explorer
-* Web viewer
-* SQL viewer
-* ML panel
+- Window manager
+- Terminal
+- Error and diagnostics panel
+- Project explorer
+- Web viewer
+- SQL viewer
+- ML insights panel
 
 The UI reflects **kernel state**; it does not invent it.
 
@@ -323,17 +317,17 @@ The UI reflects **kernel state**; it does not invent it.
 
 ### **Included**
 
-* Rust kernel
-* Python orchestrator
-* Process spawning
-* IPC
-* Capability enforcement
-* Logging
-* One language runtime (Python)
-* Project import & metadata
-* Simple UI shell
+- Rust kernel
+- Python orchestrator
+- Process spawning
+- IPC
+- Capability enforcement
+- Logging
+- One language runtime (Python)
+- Project import and metadata
+- Simple UI shell
 
-Architecturally complete, minimal feature set.
+Architecturally complete, minimally featured.
 
 ---
 
@@ -341,13 +335,13 @@ Architecturally complete, minimal feature set.
 
 Explicitly excluded from MVP:
 
-* Bare-metal booting
-* POSIX compatibility
-* Full filesystem drivers
-* Arbitrary native execution
-* Autonomous agents
-* Performance optimization
-* Rich GUI frameworks
+- Bare-metal booting
+- POSIX compatibility
+- Full filesystem drivers
+- Arbitrary native execution
+- Autonomous agents
+- Performance optimization
+- Rich GUI frameworks
 
 **Correctness > completeness.**
 
@@ -355,20 +349,18 @@ Explicitly excluded from MVP:
 
 ## **Repository Layout**
 
-See [`/docs`](./docs) for detailed specifications.
-
-* `kernel/` — Trusted microkernel (Rust)
-* `orchestrator/` — User-space policy (Python)
-* `services/` — Language runtimes & system services
-* `ui/` — UI shell (IPC client)
-* `projects/` — Sandboxed user projects
-* `docs/` — Architecture contracts
+- `kernel/` — Trusted microkernel (Rust)
+- `orchestrator/` — User-space policy layer (Python)
+- `services/` — Language runtimes and system services
+- `ui/` — UI shell (IPC client)
+- `projects/` — Sandboxed user projects
+- `docs/` — Architecture and contracts
 
 ---
 
 ## **Status**
 
-SuperOS is under active architectural development.
+SuperOS is under active architectural development.  
 Design correctness is prioritized over implementation speed.
 
 Once an invariant is locked, it is **not broken**.
@@ -377,13 +369,9 @@ Once an invariant is locked, it is **not broken**.
 
 ## **Final Principle (Locked)**
 
-**SuperOS is a process control plane.**
-**The kernel is law.**
+**SuperOS is a process control plane.**  
+**The kernel is law.**  
 **Shells are clients.**
 
 If a feature violates this, **it does not ship**.
 
-```
-
-#   S u p e r O S  
- 
