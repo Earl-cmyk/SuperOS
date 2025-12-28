@@ -205,3 +205,181 @@ KeyError: 'scrollbar_bg'
 2025-12-28 14:36:06,780 - ui.app - ERROR - Error during GUI shutdown: can't invoke "destroy" command: application has been destroyed
 2025-12-28 14:36:06,781 - ui.app - INFO - SuperOS UI shutdown complete
 2025-12-28 14:36:10,274 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 17:34:28,632 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 17:34:41,451 - ui.app - ERROR - Failed to initialize SuperOS UI: Desktop.__init__() takes 2 positional arguments but 3 were given
+2025-12-28 17:34:41,453 - ui.app - CRITICAL - Fatal error in SuperOS UI: Desktop.__init__() takes 2 positional arguments but 3 were given
+Traceback (most recent call last):
+  File "C:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "C:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 53, in __init__
+    self._create_workspace()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 107, in _create_workspace
+    self.desktop = Desktop(self, self.events)
+                   ~~~~~~~^^^^^^^^^^^^^^^^^^^
+TypeError: Desktop.__init__() takes 2 positional arguments but 3 were given
+2025-12-28 17:37:39,595 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 17:37:40,398 - ui.app - ERROR - Failed to initialize SuperOS UI: Terminal.__init__() takes 3 positional arguments but 4 were given
+2025-12-28 17:37:40,408 - ui.app - CRITICAL - Fatal error in SuperOS UI: Terminal.__init__() takes 3 positional arguments but 4 were given
+Traceback (most recent call last):
+  File "C:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "C:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 55, in __init__
+    self._create_terminal()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 143, in _create_terminal
+    self.terminal = Terminal(self, self.ipc, self.events)
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Terminal.__init__() takes 3 positional arguments but 4 were given
+2025-12-28 17:39:44,959 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 17:39:45,033 - ui.app - ERROR - Failed to initialize SuperOS UI: Toolbar.__init__() missing 1 required positional argument: 'events'
+2025-12-28 17:39:45,034 - ui.app - CRITICAL - Fatal error in SuperOS UI: Toolbar.__init__() missing 1 required positional argument: 'events'
+Traceback (most recent call last):
+  File "C:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "C:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 52, in __init__
+    self._create_toolbar()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 99, in _create_toolbar
+    self.toolbar = Toolbar(self, self.ipc, self.events)
+                   ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Toolbar.__init__() missing 1 required positional argument: 'events'
+2025-12-28 17:40:56,500 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 17:40:56,572 - ui.app - ERROR - Failed to initialize SuperOS UI: Toolbar.__init__() missing 1 required positional argument: 'events'
+2025-12-28 17:40:56,572 - ui.app - CRITICAL - Fatal error in SuperOS UI: Toolbar.__init__() missing 1 required positional argument: 'events'
+Traceback (most recent call last):
+  File "C:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "C:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 52, in __init__
+    self._create_toolbar()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 99, in _create_toolbar
+    self.toolbar = Toolbar(self, self.ipc, self.events)
+                   ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Toolbar.__init__() missing 1 required positional argument: 'events'
+2025-12-28 17:44:12,995 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 17:44:17,489 - ui.app - ERROR - Failed to initialize SuperOS UI: StatusBar.__init__() missing 1 required positional argument: 'events'
+2025-12-28 17:44:17,496 - ui.app - CRITICAL - Fatal error in SuperOS UI: StatusBar.__init__() missing 1 required positional argument: 'events'
+Traceback (most recent call last):
+  File "C:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "C:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 56, in __init__
+    self._create_statusbar()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 150, in _create_statusbar
+    self.status_bar = StatusBar(self)
+                      ~~~~~~~~~^^^^^^
+TypeError: StatusBar.__init__() missing 1 required positional argument: 'events'
+2025-12-28 17:45:43,031 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 17:45:43,577 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 17:45:43,577 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 17:46:10,349 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 17:46:10,350 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 17:46:10,388 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 17:49:37,468 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 17:49:41,979 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 17:49:41,980 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 17:50:00,957 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 17:50:00,958 - ui.app - ERROR - Error during GUI shutdown: can't invoke "destroy" command: application has been destroyed
+2025-12-28 17:50:00,961 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 17:50:04,004 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 17:51:15,252 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 17:51:15,953 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 17:51:15,953 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 17:51:37,553 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 17:51:37,553 - ui.app - ERROR - Error during GUI shutdown: can't invoke "destroy" command: application has been destroyed
+2025-12-28 17:51:37,554 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 17:51:40,586 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 18:18:18,471 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 18:18:21,702 - ui.app - ERROR - Failed to initialize SuperOS UI: _path_isdir: path should be string, bytes, os.PathLike or integer, not IPCBridge
+2025-12-28 18:18:21,707 - ui.app - CRITICAL - Fatal error in SuperOS UI: _path_isdir: path should be string, bytes, os.PathLike or integer, not IPCBridge
+Traceback (most recent call last):
+  File "C:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "C:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 39, in __init__
+    self._build_center_workspace()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 93, in _build_center_workspace
+    self._load_projects()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 100, in _load_projects
+    if not os.path.isdir(self.projects_dir):
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+TypeError: _path_isdir: path should be string, bytes, os.PathLike or integer, not IPCBridge
+2025-12-28 18:18:51,117 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 18:18:51,188 - ui.app - ERROR - Failed to initialize SuperOS UI: _path_isdir: path should be string, bytes, os.PathLike or integer, not IPCBridge
+2025-12-28 18:18:51,190 - ui.app - CRITICAL - Fatal error in SuperOS UI: _path_isdir: path should be string, bytes, os.PathLike or integer, not IPCBridge
+Traceback (most recent call last):
+  File "C:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "C:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 39, in __init__
+    self._build_center_workspace()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 93, in _build_center_workspace
+    self._load_projects()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 100, in _load_projects
+    if not os.path.isdir(self.projects_dir):
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+TypeError: _path_isdir: path should be string, bytes, os.PathLike or integer, not IPCBridge
+2025-12-28 18:21:17,719 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 18:21:17,954 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 18:21:17,955 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 18:21:17,955 - ui.app - ERROR - Error in GUI main loop: '_tkinter.tkapp' object has no attribute 'run'
+2025-12-28 18:21:17,955 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 18:21:17,958 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 18:21:25,433 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 18:22:51,335 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 18:22:51,408 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 18:22:51,409 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 18:26:43,176 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 18:26:43,177 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 18:26:43,376 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 18:27:00,806 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 18:27:00,885 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 18:27:00,885 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 18:27:16,085 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 18:27:16,085 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 18:27:23,003 - ui.app - INFO - Received signal 2, shutting down...

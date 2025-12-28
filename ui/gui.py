@@ -1,183 +1,203 @@
+# ui/gui.py
 """
-SuperOS Main GUI
+SuperOS GUI Shell
 
-Modern, responsive IDE-style UI for SuperOS.
-Toolbar • Explorer • Desktop • Assistant • Terminal • Status Bar
+Responsibilities:
+- Window composition ONLY
+- Widget placement
+- User input → intent (future IPC)
+
+NO business logic
+NO execution
 """
 
+import os
 import tkinter as tk
 from tkinter import ttk
-from pathlib import Path
+from tkinter.scrolledtext import ScrolledText
 
-from ui.theme.colors import THEME, set_theme
-from ui.widgets.panel import SidePanel
-from ui.widgets.desktop import Desktop
-from ui.widgets.terminal import Terminal
-from ui.widgets.toolbar import Toolbar
-from ui.widgets.statusbar import StatusBar
+# ---- FUTURE IMPORTS (INTENTIONAL, UNUSED FOR NOW) ----
+# from ui.ipc_bridge import IPCBridge
+# from ui.event_loop import UIEventLoop
+# from ai.agent_client import AIAgentClient
+# from orchestrator.client import OrchestratorClient
+# -----------------------------------------------------
 
 
 class SuperOSGUI(tk.Tk):
-    def __init__(self, ipc):
+    def __init__(self, projects_dir="projects", ipc=None):
         super().__init__()
+
         self.ipc = ipc
+        self.projects_dir = projects_dir
 
-        # ───────── Window ─────────
         self.title("SuperOS")
-        self.geometry("1400x900")
-        self.minsize(1100, 700)
+        self.geometry("1280x800")
+        self.minsize(1024, 640)
 
-        try:
-            icon = Path(__file__).parent / "assets" / "icon.ico"
-            if icon.exists():
-                self.iconbitmap(icon)
-        except Exception:
-            pass
+        self._configure_styles()
+        self._configure_grid()
+        self._build_left_output_panel()
+        self._build_center_workspace()
+        self._build_right_ai_panel()
+        self._build_terminal_panel()
 
-        # ───────── Theme ─────────
-        self._dark_mode = True
-        set_theme("dark")
-        self._setup_styles()
+    # --------------------------------------------------
+    # Styles (LIGHT, NOT A THEME ENGINE)
+    # --------------------------------------------------
 
-        # ───────── Layout ─────────
-        self._setup_layout()
-
-        # ───────── UI ─────────
-        self._create_toolbar()
-        self._create_workspace()
-        self._create_assistant()
-        self._create_terminal()
-        self._create_statusbar()
-
-        # ───────── Events ─────────
-        self.bind("<Control-q>", lambda _: self.on_close())
-        self.protocol("WM_DELETE_WINDOW", self.on_close)
-
-        self.update_status("Ready")
-
-    # ───────────────────────── Styles ─────────────────────────
-
-    def _setup_styles(self):
+    def _configure_styles(self):
         style = ttk.Style()
-        style.theme_use("clam")
+        style.configure("TLabel", font=("Segoe UI", 9))
+        style.configure("Header.TLabel", font=("Segoe UI", 9, "bold"))
 
-        style.configure(".", background=THEME["bg"], foreground=THEME["fg"])
-        style.configure("TFrame", background=THEME["bg"])
-        style.configure("Panel.TFrame", background=THEME["panel_bg"])
+    # --------------------------------------------------
+    # Layout Grid
+    # --------------------------------------------------
 
-        style.configure(
-            "TButton",
-            padding=6,
-            relief="flat"
-        )
+    def _configure_grid(self):
+        # 3 columns: output | workspace | ai
+        self.columnconfigure(0, minsize=180, weight=0)
+        self.columnconfigure(1, minsize=480, weight=1)
+        self.columnconfigure(2, minsize=190, weight=0)
 
-        style.map(
-            "TButton",
-            background=[("active", THEME["highlight"])],
-            foreground=[("active", THEME["fg"])]
-        )
+        # 2 rows: main | terminal
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, minsize=130, weight=0)
 
-        self.configure(background=THEME["bg"])
+    # --------------------------------------------------
+    # Left: Output Panel
+    # --------------------------------------------------
 
-    # ───────────────────────── Layout ─────────────────────────
+    def _build_left_output_panel(self):
+        frame = ttk.LabelFrame(self, text="Output", padding=6)
+        frame.grid(row=0, column=0, sticky="nsew", padx=(6, 3), pady=6)
 
-    def _setup_layout(self):
-        self.columnconfigure(0, weight=0, minsize=260)
-        self.columnconfigure(1, weight=1)
-        self.columnconfigure(2, weight=0, minsize=320)
-
-        self.rowconfigure(0, weight=0)
-        self.rowconfigure(1, weight=1)
-        self.rowconfigure(2, weight=0)
-        self.rowconfigure(3, weight=0)
-
-    # ───────────────────────── Components ─────────────────────────
-
-    def _create_toolbar(self):
-        self.toolbar = Toolbar(self, self.ipc, self.on_toolbar_action)
-        self.toolbar.grid(row=0, column=0, columnspan=3, sticky="ew", padx=2, pady=(2, 1))
-
-    def _create_workspace(self):
-        self.left_panel = SidePanel(self, "Explorer", THEME["panel_bg"])
-        self.desktop = Desktop(self)
-        self.right_panel = SidePanel(self, "AI Assistant", THEME["panel_bg"])
-
-        self.left_panel.grid(row=1, column=0, sticky="nsew", padx=(2, 1), pady=1)
-        self.desktop.grid(row=1, column=1, sticky="nsew", padx=1, pady=1)
-        self.right_panel.grid(row=1, column=2, sticky="nsew", padx=(1, 2), pady=1)
-
-    def _create_assistant(self):
-        self.assistant_frame = ttk.Frame(self.right_panel, style="Panel.TFrame")
-        self.assistant_frame.pack(fill="both", expand=True, padx=1, pady=1)
-
-        self.chat_display = tk.Text(
-            self.assistant_frame,
-            wrap="word",
+        self.output_view = ScrolledText(
+            frame,
             state="disabled",
-            bg=THEME["panel_bg"],
-            fg=THEME["panel_fg"],
-            insertbackground=THEME["panel_fg"],
-            padx=10,
-            pady=10
+            wrap="word",
+            font=("Consolas", 9),
+            background="#f7f7f7"
         )
-        self.chat_display.pack(fill="both", expand=True)
+        self.output_view.pack(fill="both", expand=True)
 
-        input_frame = ttk.Frame(self.assistant_frame)
-        input_frame.pack(fill="x", padx=5, pady=5)
+    # --------------------------------------------------
+    # Center: Workspace (Projects)
+    # --------------------------------------------------
 
-        self.chat_input = ttk.Entry(input_frame)
-        self.chat_input.pack(side="left", fill="x", expand=True, padx=(0, 5))
-        self.chat_input.bind("<Return>", self._on_send_message)
+    def _build_center_workspace(self):
+        frame = ttk.LabelFrame(self, text="Workspace", padding=6)
+        frame.grid(row=0, column=1, sticky="nsew", padx=3, pady=6)
 
-        ttk.Button(input_frame, text="Send", command=self._on_send_message).pack(side="right")
+        frame.columnconfigure(0, weight=1)
+        frame.rowconfigure(0, weight=1)
 
-    def _create_terminal(self):
-        self.terminal = Terminal(self, self.ipc)
-        self.terminal.grid(row=2, column=0, columnspan=3, sticky="ew", padx=2, pady=1)
+        self.workspace = ttk.Treeview(frame)
+        self.workspace.grid(row=0, column=0, sticky="nsew")
 
-    def _create_statusbar(self):
-        self.status_bar = StatusBar(self)
-        self.status_bar.grid(row=3, column=0, columnspan=3, sticky="ew")
+        self._load_projects()
 
-    # ───────────────────────── Assistant ─────────────────────────
+    def _load_projects(self):
+        self.workspace.delete(*self.workspace.get_children())
 
-    def _on_send_message(self, event=None):
-        msg = self.chat_input.get().strip()
-        if not msg:
+        root = self.workspace.insert("", "end", text=self.projects_dir, open=True)
+
+        if not os.path.isdir(self.projects_dir):
+            self.workspace.insert(root, "end", text="[projects dir missing]")
             return
-        self.chat_input.delete(0, "end")
-        self._append_message("You", msg)
-        self._append_message("Assistant", "AI integration pending.")
 
-    def _append_message(self, sender, message):
-        self.chat_display.config(state="normal")
-        self.chat_display.insert("end", f"{sender}: {message}\n\n")
-        self.chat_display.see("end")
-        self.chat_display.config(state="disabled")
+        for item in sorted(os.listdir(self.projects_dir)):
+            self.workspace.insert(root, "end", text=item)
 
-    # ───────────────────────── Actions ─────────────────────────
+    # --------------------------------------------------
+    # Right: AI Agent Panel
+    # --------------------------------------------------
 
-    def on_toolbar_action(self, action: str):
-        if action == "run":
-            self.terminal.run_command("python sandbox/hello.py")
-        elif action == "toggle_theme":
-            self.toggle_theme()
-        else:
-            self.ipc.send("ui_action", {"action": action})
+    def _build_right_ai_panel(self):
+        frame = ttk.LabelFrame(self, text="AI Agent", padding=6)
+        frame.grid(row=0, column=2, sticky="nsew", padx=(3, 6), pady=6)
 
-    def toggle_theme(self):
-        self._dark_mode = not self._dark_mode
-        set_theme("dark" if self._dark_mode else "light")
-        self._setup_styles()
+        frame.columnconfigure(0, weight=1)
+        frame.rowconfigure(1, weight=1)
 
-    def update_status(self, message, category="info"):
-        self.status_bar.set_message(message, category)
+        # Chat input (search-box style)
+        self.ai_input = ttk.Entry(frame)
+        self.ai_input.grid(row=0, column=0, sticky="ew", pady=(0, 6))
 
-    def on_close(self):
-        try:
-            self.ipc.send("app_shutdown", {})
-        finally:
-            self.destroy()
+        # Chat history
+        self.ai_chat = ScrolledText(
+            frame,
+            state="disabled",
+            wrap="word",
+            font=("Segoe UI", 9)
+        )
+        self.ai_chat.grid(row=1, column=0, sticky="nsew")
 
-    def run(self):
-        self.mainloop()
+    # --------------------------------------------------
+    # Bottom: Terminal Panel
+    # --------------------------------------------------
+
+    def _build_terminal_panel(self):
+        frame = ttk.LabelFrame(self, text="Terminal", padding=6)
+        frame.grid(
+            row=1,
+            column=0,
+            columnspan=3,
+            sticky="nsew",
+            padx=6,
+            pady=(0, 6),
+        )
+
+        frame.columnconfigure(0, weight=1)
+
+        self.terminal_input = ttk.Entry(
+            frame,
+            font=("Consolas", 10)
+        )
+        self.terminal_input.grid(row=0, column=0, sticky="ew", padx=(0, 8))
+
+        btns = ttk.Frame(frame)
+        btns.grid(row=0, column=1, sticky="e")
+
+        ttk.Button(btns, text="Run", command=self._on_run).pack(side="left", padx=2)
+        ttk.Button(btns, text="Stop", command=self._on_stop).pack(side="left", padx=2)
+        ttk.Button(btns, text="Run Last", command=self._on_run_last).pack(side="left", padx=2)
+
+    # --------------------------------------------------
+    # Button Handlers (INTENTS ONLY)
+    # --------------------------------------------------
+
+    def _on_run(self):
+        cmd = self.terminal_input.get()
+        self._append_output(f"> {cmd}\n")
+        # FUTURE: ipc.publish("process.spawn", ...)
+
+    def _on_stop(self):
+        self._append_output("[STOP]\n")
+
+    def _on_run_last(self):
+        self._append_output("[RUN LAST]\n")
+
+    # --------------------------------------------------
+    # Utilities
+    # --------------------------------------------------
+
+    def _append_output(self, text: str):
+        self.output_view.configure(state="normal")
+        self.output_view.insert("end", text)
+        self.output_view.configure(state="disabled")
+        self.output_view.see("end")
+
+
+# ------------------------------------------------------
+# Standalone Run (for testing only)
+# ------------------------------------------------------
+
+def main():
+    app = SuperOSGUI(projects_dir="projects")
+    app.mainloop()
+
+
+if __name__ == "__main__":
+    main()

@@ -141,7 +141,10 @@ class SuperOSApp:
         try:
             logger.info("Initializing SuperOS UI...")
             self.ipc = IPCBridge()
-            self.gui = SuperOSGUI(self.ipc)
+            self.gui = SuperOSGUI(
+                projects_dir="projects",
+                ipc=self.ipc
+            )
             logger.info("SuperOS UI initialized successfully")
         except Exception as e:
             logger.error(f"Failed to initialize SuperOS UI: {e}")
@@ -161,7 +164,7 @@ class SuperOSApp:
         logger.info("Starting SuperOS UI...")
         
         try:
-            self.gui.run()
+            self.gui.mainloop()
         except Exception as e:
             logger.error(f"Error in GUI main loop: {e}")
         finally:
