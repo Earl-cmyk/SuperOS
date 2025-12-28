@@ -1,44 +1,4 @@
-"""
-SuperOS UI Color System
-
-All colors are semantic.
-No widget should hardcode hex values.
-"""
-
-# Core surfaces
-BACKGROUND = "#0e0f13"      # app background
-SURFACE = "#151722"         # main workspace surface
-PANEL = "#1b1e2e"           # side panels, chrome
-OVERLAY = "#202336"         # dialogs, overlays
-
-# Borders & dividers
-BORDER = "#2a2e45"
-DIVIDER = "#24283b"
-
-# Text
-TEXT_PRIMARY = "#e6e6eb"
-TEXT_SECONDARY = "#b4b7c5"
-TEXT_MUTED = "#8b90a7"
-TEXT_DISABLED = "#5c607a"
-
-# Accents & intent
-ACCENT = "#7aa2f7"          # primary action / focus
-ACCENT_SOFT = "#3d59a1"
-
-SUCCESS = "#9ece6a"
-WARNING = "#e0af68"
-ERROR = "#f7768e"
-INFO = "#7dcfff"
-
-# Terminal
-TERMINAL_BG = "#0b0d12"
-TERMINAL_FG = "#c0caf5"
-TERMINAL_CURSOR = "#7aa2f7"
-
-# States
-FOCUS_RING = "#7aa2f7"
-SELECTION_BG = "#283457"
-HOVER_BG = "#1f2335"
+# ui/theme/colors.py
 
 # Dark Theme
 DARK = {
@@ -52,14 +12,22 @@ DARK = {
     'error': '#f38ba8',
     'panel_bg': '#181825',
     'panel_fg': '#bac2de',
-    'terminal_bg': '#11111b',
-    'terminal_fg': '#cdd6f4',
     'border': '#313244',
     'highlight': '#45475a',
     'toolbar_bg': '#181825',
     'toolbar_fg': '#cdd6f4',
     'status_bg': '#181825',
     'status_fg': '#a6adc8',
+    
+    # Terminal colors
+    'terminal_bg': '#0b0d12',
+    'terminal_fg': '#f8f8f2',
+    'terminal_header_bg': '#1a1e26',
+    'terminal_prompt': '#50fa7b',
+    'terminal_cursor': '#f8f8f2',
+    'terminal_selection': '#44475a',
+    'terminal_command': '#8be9fd',
+    'terminal_error': '#ff5555',
 }
 
 # Light Theme
@@ -74,20 +42,38 @@ LIGHT = {
     'error': '#d20f39',
     'panel_bg': '#e6e9ef',
     'panel_fg': '#4c4f69',
-    'terminal_bg': '#dce0e8',
-    'terminal_fg': '#4c4f69',
     'border': '#bcc0cc',
     'highlight': '#acb0be',
     'toolbar_bg': '#e6e9ef',
     'toolbar_fg': '#4c4f69',
     'status_bg': '#e6e9ef',
     'status_fg': '#6c6f85',
+    
+    # Terminal colors
+    'terminal_bg': '#f8f8f2',
+    'terminal_fg': '#282a36',
+    'terminal_header_bg': '#e6e6e6',
+    'terminal_prompt': '#50fa7b',
+    'terminal_cursor': '#282a36',
+    'terminal_selection': '#b4d8fd',
+    'terminal_command': '#6272a4',
+    'terminal_error': '#ff5555',
 }
 
 # Default theme
 THEME = DARK
 
 def set_theme(theme_name: str):
-    """Set the current theme."""
+    """Set the current theme.
+    
+    Args:
+        theme_name: Either 'dark' or 'light' (case-insensitive)
+    """
     global THEME
-    THEME = DARK if theme_name.lower() == 'dark' else LIGHT
+    theme_name = theme_name.lower()
+    if theme_name == 'dark':
+        THEME = DARK
+    elif theme_name == 'light':
+        THEME = LIGHT
+    else:
+        raise ValueError(f"Unknown theme: {theme_name}. Use 'dark' or 'light'")
