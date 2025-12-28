@@ -10,6 +10,7 @@ If this process dies, the kernel must remain intact.
 """
 
 import asyncio
+import importlib
 from loguru import logger
 
 from orchestrator.capability_enforcer import default_enforcer
@@ -51,12 +52,60 @@ async def main() -> None:
     sys_logger.info("orchestrator", "core managers online")
 
     # -------------------------
+    # IPC → Process spawn bridge
+    # -------------------------
+
+    async def handle_process_spawn(message: dict):
+        role = message.get("metadata", {}).get("role", "user")
+        entrypoint = message["entrypoint"]
+        requested_caps = set(message.get("capabilities", []))
+
+        sys_logger.info(
+            "orchestrator",
+            f"spawn request: {entrypoint} ({role})"
+        )
+
+        # 1️⃣ Policy check (DOES NOT EXECUTE)
+        proc_control.spawn_process(
+            role=role,
+            entrypoint=entrypoint.encode(),
+            requested_caps=requested_caps,
+        )
+
+        # 2️⃣ Actual execution (user-space for now)
+        await process_manager.spawn(
+            name=message.get("name", entrypoint),
+            entrypoint=entrypoint,
+            capabilities=requested_caps,
+            metadata=message.get("metadata", {}),
+        )
+        
+        if entrypoint == "ui.app":
+            module = importlib.import_module(entrypoint)
+            module.main()
+
+    ipc.subscribe("process.spawn", handle_process_spawn)
+
+    # -------------------------
     # BOOT EVENT (important)
     # -------------------------
 
     await ipc.publish(
         "process.spawn",
-        {"project_id": "boot-demo"},
+        {
+            "name": "system-ui",
+            "entrypoint": "ui.app",
+            "capabilities": [
+                "IPC_SEND",
+                "IPC_RECV",
+                "DISPLAY",
+                "INPUT",
+            ],
+            "metadata": {
+                "role": "ui",
+                "auto_restart": True,
+            },
+        },
     )
 
     sys_logger.info("orchestrator", "system entering steady state")

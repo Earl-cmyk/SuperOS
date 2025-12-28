@@ -88,21 +88,20 @@ def default_enforcer() -> CapabilityEnforcer:
     enforcer.register_policy(
         role="runtime",
         capabilities={
-            "PROC_SPAWN",
             "IPC_SEND",
             "IPC_RECV",
-            "FS_READ",
-            "FS_WRITE",
+            "DISPLAY",
+            "INPUT",
         },
     )
 
     enforcer.register_policy(
-        role="ml_service",
+        role="ui-shell",
         capabilities={
             "IPC_SEND",
             "IPC_RECV",
-            "FS_READ",
-            "NET_OUTBOUND",
+            "DISPLAY",
+            "INPUT",
         },
     )
 

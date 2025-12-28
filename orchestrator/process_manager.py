@@ -9,6 +9,8 @@
 import itertools
 from enum import Enum
 from typing import Dict
+import importlib
+import asyncio
 
 from loguru import logger
 
@@ -35,59 +37,46 @@ class ProcessManager:
         self._pid_gen = itertools.count(start=1)
         self._processes: Dict[int, Process] = {}
 
-        # IPC handlers
-        self.ipc.subscribe("process.spawn", self._on_spawn)
-        self.ipc.subscribe("process.kill", self._on_kill)
-
-    # -------------------------
-    # IPC Handlers
-    # -------------------------
-
-    async def _on_spawn(self, payload: dict):
-        project_id = payload.get("project_id")
-        if not project_id:
-            logger.error("process.spawn missing project_id")
-            return
-
+    async def spawn(
+        self,
+        name: str,
+        entrypoint: str,
+        capabilities: set,
+        metadata: dict,
+    ):
         pid = next(self._pid_gen)
-        proc = Process(pid=pid, project_id=project_id)
+        proc = Process(pid=pid, project_id=name)
         self._processes[pid] = proc
 
-        logger.info(f"Process spawned pid={pid} project={project_id}")
+        logger.info(f"Process spawned pid={pid} name={name}")
 
         await self.ipc.publish(
             "process.started",
             {
                 "pid": pid,
-                "project_id": project_id,
+                "name": name,
+                "entrypoint": entrypoint,
                 "state": proc.state,
             },
         )
 
-        # Simulated execution
         proc.state = ProcessState.RUNNING
 
-    async def _on_kill(self, payload: dict):
-        pid = payload.get("pid")
-        proc = self._processes.get(pid)
+        # 🔥 ACTUALLY RUN THE MODULE
+        try:
+            module = importlib.import_module(entrypoint)
 
-        if not proc:
-            logger.warning(f"process.kill unknown pid={pid}")
-            return
+            if hasattr(module, "main"):
+                asyncio.create_task(
+                    asyncio.to_thread(module.main)
+                )
+            else:
+                logger.error(
+                    f"{entrypoint} has no main()"
+                )
 
-        proc.state = ProcessState.TERMINATED
-        logger.info(f"Process terminated pid={pid}")
-
-        await self.ipc.publish(
-            "process.exited",
-            {
-                "pid": pid,
-                "project_id": proc.project_id,
-                "state": proc.state,
-            },
-        )
-
-        self._processes.pop(pid, None)
+        except Exception as e:
+            logger.exception(f"Failed to start {entrypoint}: {e}")
 
     # -------------------------
     # Introspection

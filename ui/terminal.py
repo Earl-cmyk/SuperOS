@@ -1,35 +1,37 @@
-# ui/sql_viewer.py
+# ui/terminal.py
 #
-# SQL Viewer
+# Controlled Terminal UI
 #
-# Displays SQL query results returned from the SQL runtime.
-# This UI does NOT execute SQL itself.
+# Acts as a frontend to shell services via IPC.
+# No direct PTY or subprocess access.
 
-class SQLViewer:
+class TerminalView:
     def __init__(self, ipc):
         self.ipc = ipc
-        self.last_result: str | None = None
+        self.buffer: list[str] = []
 
-        self.ipc.subscribe("sql_result", self.on_result)
+        self.ipc.subscribe("terminal_output", self.on_output)
         self.ipc.subscribe("errors", self.on_error)
 
     # -------------------------
     # User Actions
     # -------------------------
 
-    def submit_query(self, sql: str):
-        self.ipc.send("sql_query", {"sql": sql})
+    def send_input(self, text: str):
+        self.ipc.send("terminal_input", {"data": text})
 
     # -------------------------
     # IPC Handlers
     # -------------------------
 
-    def on_result(self, payload: dict):
-        self.last_result = payload.get("output", "")
+    def on_output(self, payload: dict):
+        
+        output = payload.get("data", "")
+        self.buffer.append(output)
         self.render()
 
     def on_error(self, error: str):
-        self.last_result = f"ERROR: {error}"
+        self.buffer.append(f"[ERROR] {error}")
         self.render()
 
     # -------------------------
@@ -37,9 +39,16 @@ class SQLViewer:
     # -------------------------
 
     def render(self):
-        print("\n=== SQL Viewer ===")
-        if self.last_result:
-            print(self.last_result)
-        else:
-            print("(no results)")
-        print("==================\n")
+        print("\n=== Terminal ===")
+        for line in self.buffer[-50:]:
+            print(line)
+        print("================\n")
+
+    def write(self, payload: dict | str):
+            if isinstance(payload, dict):
+                text = payload.get("data", "")
+            else:
+                text = str(payload)
+
+            self.buffer.append(text)
+            self.render()
