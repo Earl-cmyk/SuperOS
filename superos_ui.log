@@ -1,0 +1,111 @@
+2025-12-28 12:59:09,141 - __main__ - INFO - Initializing SuperOS UI...
+2025-12-28 12:59:23,239 - __main__ - ERROR - Failed to initialize SuperOS UI: SidePanel.__init__() got an unexpected keyword argument 'fg'. Did you mean 'bg'?
+2025-12-28 12:59:23,257 - __main__ - CRITICAL - Fatal error in SuperOS UI: SidePanel.__init__() got an unexpected keyword argument 'fg'. Did you mean 'bg'?
+Traceback (most recent call last):
+  File "c:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "c:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "c:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "c:\Users\Dimla\superos\ui\gui.py", line 45, in __init__
+    self._create_panels()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\Dimla\superos\ui\gui.py", line 96, in _create_panels
+    self.left_panel = SidePanel(
+                      ~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<2 lines>...
+        fg=THEME['panel_fg']
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+TypeError: SidePanel.__init__() got an unexpected keyword argument 'fg'. Did you mean 'bg'?
+2025-12-28 13:00:43,244 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 13:00:50,050 - ui.app - ERROR - Failed to initialize SuperOS UI: SidePanel.__init__() got an unexpected keyword argument 'fg'. Did you mean 'bg'?
+2025-12-28 13:00:50,062 - ui.app - CRITICAL - Fatal error in SuperOS UI: SidePanel.__init__() got an unexpected keyword argument 'fg'. Did you mean 'bg'?
+Traceback (most recent call last):
+  File "C:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "C:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 45, in __init__
+    self._create_panels()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 96, in _create_panels
+    self.left_panel = SidePanel(
+                      ~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<2 lines>...
+        fg=THEME['panel_fg']
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+TypeError: SidePanel.__init__() got an unexpected keyword argument 'fg'. Did you mean 'bg'?
+2025-12-28 13:02:53,994 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 13:02:54,596 - ui.app - ERROR - Failed to initialize SuperOS UI: Desktop.__init__() got an unexpected keyword argument 'bg'
+2025-12-28 13:02:54,598 - ui.app - CRITICAL - Fatal error in SuperOS UI: Desktop.__init__() got an unexpected keyword argument 'bg'
+Traceback (most recent call last):
+  File "C:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "C:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 45, in __init__
+    self._create_panels()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 103, in _create_panels
+    self.desktop = Desktop(self, bg=THEME['bg'])
+                   ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Desktop.__init__() got an unexpected keyword argument 'bg'
+2025-12-28 13:03:17,795 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 13:03:18,285 - ui.app - ERROR - Failed to initialize SuperOS UI: Terminal.__init__() got an unexpected keyword argument 'bg'
+2025-12-28 13:03:18,287 - ui.app - CRITICAL - Fatal error in SuperOS UI: Terminal.__init__() got an unexpected keyword argument 'bg'
+Traceback (most recent call last):
+  File "C:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "C:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 45, in __init__
+    self._create_panels()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 113, in _create_panels
+    self.terminal = Terminal(self, self.ipc, bg=THEME['terminal_bg'], fg=THEME['terminal_fg'])
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Terminal.__init__() got an unexpected keyword argument 'bg'
+2025-12-28 13:03:43,930 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 13:03:44,512 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 13:03:44,512 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 13:03:53,566 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 13:03:53,585 - ui.app - ERROR - Error during GUI shutdown: can't invoke "destroy" command: application has been destroyed
+2025-12-28 13:03:53,586 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 13:05:01,545 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 13:05:08,710 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 13:05:09,193 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 13:05:09,194 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 13:05:28,494 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 13:05:28,495 - ui.app - ERROR - Error during GUI shutdown: can't invoke "destroy" command: application has been destroyed
+2025-12-28 13:05:28,495 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 13:06:01,619 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 13:06:06,900 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 13:06:07,381 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 13:06:07,382 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 13:06:19,718 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 13:06:19,718 - ui.app - ERROR - Error during GUI shutdown: can't invoke "destroy" command: application has been destroyed
+2025-12-28 13:06:19,719 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 13:06:50,658 - ui.app - INFO - Received signal 2, shutting down...

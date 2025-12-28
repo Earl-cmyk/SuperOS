@@ -5,7 +5,7 @@ import tkinter as tk
 
 class Terminal(tk.Frame):
     def __init__(self, parent, ipc):
-        super().__init__(parent, bg="#0b0d12", height=220)
+        super().__init__(parent, bg="#0b0d12", height=100)
         self.pack_propagate(False)
 
         self.ipc = ipc
