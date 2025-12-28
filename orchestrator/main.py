@@ -55,34 +55,43 @@ async def main() -> None:
     # IPC → Process spawn bridge
     # -------------------------
 
-    async def handle_process_spawn(message: dict):
-        role = message.get("metadata", {}).get("role", "user")
-        entrypoint = message["entrypoint"]
-        requested_caps = set(message.get("capabilities", []))
+    # async def handle_process_spawn(message: dict):
+    #     role = message.get("metadata", {}).get("role", "user")
+    #     entrypoint = message["entrypoint"]
+    #     requested_caps = set(message.get("capabilities", []))
 
-        sys_logger.info(
-            "orchestrator",
-            f"spawn request: {entrypoint} ({role})"
-        )
+    #     sys_logger.info(
+    #         "orchestrator",
+    #         f"spawn request: {entrypoint} ({role})"
+    #     )
 
-        # 1️⃣ Policy check (DOES NOT EXECUTE)
-        proc_control.spawn_process(
-            role=role,
-            entrypoint=entrypoint.encode(),
-            requested_caps=requested_caps,
-        )
+    #     # 1️⃣ Policy check (DOES NOT EXECUTE)
+    #     proc_control.spawn_process(
+    #         role=role,
+    #         entrypoint=entrypoint.encode(),
+    #         requested_caps=requested_caps,
+    #     )
 
-        # 2️⃣ Actual execution (user-space for now)
-        await process_manager.spawn(
-            name=message.get("name", entrypoint),
-            entrypoint=entrypoint,
-            capabilities=requested_caps,
-            metadata=message.get("metadata", {}),
-        )
+    #     # 2️⃣ Actual execution (user-space for now)
+    #     await process_manager.spawn(
+    #         name=message.get("name", entrypoint),
+    #         entrypoint=entrypoint,
+    #         capabilities=requested_caps,
+    #         metadata=message.get("metadata", {}),
+    #     )
         
-        if entrypoint == "ui.app":
-            module = importlib.import_module(entrypoint)
+    #     if entrypoint == "ui.app":
+    #         module = importlib.import_module(entrypoint)
+    #         module.main()
+
+    async def handle_process_spawn(payload):
+        module = importlib.import_module(payload["entrypoint"])
+
+        # UI process must block
+        if payload["name"] == "system-ui":
             module.main()
+        else:
+            asyncio.create_task(asyncio.to_thread(module.main))
 
     ipc.subscribe("process.spawn", handle_process_spawn)
 

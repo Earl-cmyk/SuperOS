@@ -13,7 +13,14 @@ from ui.ipc_bridge import IPCBridge
 from ui.project_explorer import ProjectExplorer
 from ui.terminal import TerminalView
 from ui.error_sidebar import ErrorSidebar
+# ui/app.py
+#
+# SuperOS GUI Shell
+# Tkinter owns rendering & input.
+# This is a USER-SPACE PROCESS.
 
+from ui.ipc_bridge import IPCBridge
+from ui.gui import SuperOSGUI
 
 class SuperOSApp:
     def __init__(self):
@@ -53,12 +60,14 @@ class SuperOSApp:
         self.ipc.close()
 
 def main():
-    app = SuperOSApp()
-    try:
-        app.start()
-    except KeyboardInterrupt:
-        app.shutdown()
-
+    # app = SuperOSApp()
+    # try:
+    #     app.start()
+    # except KeyboardInterrupt:
+    #     app.shutdown()
+    ipc = IPCBridge()
+    gui = SuperOSGUI(ipc)
+    gui.run()
 
 if __name__ == "__main__":
     main()
