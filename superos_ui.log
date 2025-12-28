@@ -130,3 +130,78 @@ TypeError: Terminal.__init__() got an unexpected keyword argument 'bg'
 2025-12-28 13:33:38,843 - ui.app - ERROR - Error during GUI shutdown: can't invoke "destroy" command: application has been destroyed
 2025-12-28 13:33:38,844 - ui.app - INFO - SuperOS UI shutdown complete
 2025-12-28 13:33:46,319 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 13:49:39,577 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 13:49:43,156 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 13:49:43,157 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 13:49:59,714 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 13:49:59,727 - ui.app - ERROR - Error during GUI shutdown: can't invoke "destroy" command: application has been destroyed
+2025-12-28 13:49:59,728 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 13:50:09,499 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 14:15:50,106 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 14:15:53,280 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 14:15:53,280 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 14:16:23,253 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 14:16:23,283 - ui.app - ERROR - Error during GUI shutdown: can't invoke "destroy" command: application has been destroyed
+2025-12-28 14:16:23,284 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 14:16:45,025 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 14:19:19,455 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 14:19:19,959 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 14:19:19,960 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 14:19:44,998 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 14:19:44,999 - ui.app - ERROR - Error during GUI shutdown: can't invoke "destroy" command: application has been destroyed
+2025-12-28 14:19:45,000 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 14:19:51,316 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 14:21:33,648 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 14:21:34,397 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 14:21:34,398 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 14:25:50,423 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 14:25:50,424 - ui.app - ERROR - Error during GUI shutdown: can't invoke "winfo" command: application has been destroyed
+2025-12-28 14:25:50,425 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 14:31:56,020 - ui.app - INFO - Received signal 2, shutting down...
+2025-12-28 14:32:06,597 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 14:32:06,679 - ui.app - ERROR - Failed to initialize SuperOS UI: '_tkinter.tkapp' object has no attribute 'ipc'
+2025-12-28 14:32:06,680 - ui.app - CRITICAL - Fatal error in SuperOS UI: '_tkinter.tkapp' object has no attribute 'ipc'
+Traceback (most recent call last):
+  File "C:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "C:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 24, in __init__
+    self._create_toolbar()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 178, in _create_toolbar
+    self.toolbar = Toolbar(self, self.ipc, self.on_toolbar_action)
+                                 ^^^^^^^^
+  File "C:\Users\Dimla\AppData\Local\Programs\Python\Python314\Lib\tkinter\__init__.py", line 2566, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'ipc'
+2025-12-28 14:34:11,893 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 14:34:11,984 - ui.app - ERROR - Failed to initialize SuperOS UI: 'scrollbar_bg'
+2025-12-28 14:34:11,985 - ui.app - CRITICAL - Fatal error in SuperOS UI: 'scrollbar_bg'
+Traceback (most recent call last):
+  File "C:\Users\Dimla\superos\ui\app.py", line 216, in main
+    app = SuperOSApp()
+  File "C:\Users\Dimla\superos\ui\app.py", line 137, in __init__
+    self._initialize()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\app.py", line 144, in _initialize
+    self.gui = SuperOSGUI(self.ipc)
+               ~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 40, in __init__
+    self._setup_styles()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Dimla\superos\ui\gui.py", line 173, in _setup_styles
+    background=THEME['scrollbar_bg'],
+               ~~~~~^^^^^^^^^^^^^^^^
+KeyError: 'scrollbar_bg'
+2025-12-28 14:35:16,636 - ui.app - INFO - Initializing SuperOS UI...
+2025-12-28 14:35:17,134 - ui.app - INFO - SuperOS UI initialized successfully
+2025-12-28 14:35:17,135 - ui.app - INFO - Starting SuperOS UI...
+2025-12-28 14:36:06,778 - ui.app - INFO - Shutting down SuperOS UI...
+2025-12-28 14:36:06,780 - ui.app - ERROR - Error during GUI shutdown: can't invoke "destroy" command: application has been destroyed
+2025-12-28 14:36:06,781 - ui.app - INFO - SuperOS UI shutdown complete
+2025-12-28 14:36:10,274 - ui.app - INFO - Received signal 2, shutting down...

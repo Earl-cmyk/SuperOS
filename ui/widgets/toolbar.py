@@ -14,17 +14,19 @@ class Toolbar(ttk.Frame):
     A modern toolbar with support for buttons, dropdowns, and separators.
     """
     
-    def __init__(self, parent, ipc, **kwargs):
+    def __init__(self, parent, ipc, on_action, **kwargs):
         """
         Initialize the toolbar.
         
         Args:
             parent: Parent widget
             ipc: IPC bridge for communication
+            on_action: Callback function for button actions
             **kwargs: Additional frame arguments
         """
         super().__init__(parent, style='Toolbar.TFrame', **kwargs)
         self.ipc = ipc
+        self.on_action = on_action
         self.buttons: Dict[str, ttk.Button] = {}
         self._setup_style()
         self._create_toolbar()
@@ -100,7 +102,7 @@ class Toolbar(ttk.Frame):
             self,
             text=icon,
             style='Toolbar.TButton',
-            command=lambda: self._on_button_click(action)
+            command=lambda a=action: self._on_button_click(a)
         )
         btn.pack(side='left', padx=1, pady=2)
         
@@ -119,17 +121,8 @@ class Toolbar(ttk.Frame):
     
     def _on_button_click(self, action: str):
         """Handle button clicks"""
-        # Special handling for theme toggle
-        if action == 'toggle_theme':
-            if hasattr(self.master, 'toggle_theme'):
-                self.master.toggle_theme()
-                return
-        
-        # Forward other actions
-        if hasattr(self.master, 'on_toolbar_action'):
-            self.master.on_toolbar_action(action)
-        else:
-            self.ipc.send('toolbar_action', {'action': action})
+        print(f"Toolbar action: {action}")
+        self.on_action(action)
     
     def _create_tooltip(self, widget, text: str):
         """Create a tooltip for a widget"""
