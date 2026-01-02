@@ -79,7 +79,7 @@ async def main() -> None:
     #         capabilities=requested_caps,
     #         metadata=message.get("metadata", {}),
     #     )
-        
+
     #     if entrypoint == "ui.app":
     #         module = importlib.import_module(entrypoint)
     #         module.main()
@@ -125,6 +125,15 @@ async def main() -> None:
 
     await ipc.run()
 
+from ui.gui import DesktopOS
+
+ai_agent = DesktopOS(ipc)
+
+async def handle_ml_request(payload):
+    response = await ai_agent.handle_request(payload)
+    await ipc.publish("ml_response", response)
+
+ipc.subscribe("ml_request", handle_ml_request)
 
 if __name__ == "__main__":
     asyncio.run(main())
